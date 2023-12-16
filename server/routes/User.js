@@ -1,5 +1,7 @@
 import express from "express";
-import { sendotp, signup } from "../controllers/Auth.js";
+import { sendotp, signup, login } from "../controllers/Auth.js";
+// import { auth } from "../middlewares/Auth.js";
+
 const router = express.Router();
 
 // ********************************************************************************************************
@@ -7,7 +9,7 @@ const router = express.Router();
 // ********************************************************************************************************
 
 // Route for user login
-// router.post("/login", login)
+router.post("/login", login)
 
 // Route for user signup
 router.post("/signup", signup)

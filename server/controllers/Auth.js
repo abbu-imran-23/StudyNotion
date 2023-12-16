@@ -1,6 +1,10 @@
 import { User, OTP, Profile } from "../models/Models.js";
 import bcrypt from "bcrypt";
 import otpGenerator from "otp-generator";
+import JWT from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // ********************************** SEND OTP ************************************* //
 const sendotp = async (req, res) => {
@@ -89,8 +93,7 @@ const signup = async (req, res) => {
     if (password !== confirmPassword) {
       return res.status(400).json({
         success: false,
-        message:
-          "Password and Confirm Password do not match. Please try again.",
+        message: "Password and Confirm Password do not match. Please try again.",
       });
     }
 
@@ -160,4 +163,77 @@ const signup = async (req, res) => {
   }
 };
 
-export { sendotp, signup };
+// ********************************** LOGIN ************************************* //
+const login = async (req, res) => {
+  try {
+    // Destructure fields from the request body
+    const { email, password } = req.body;
+
+    // Check if All Details are there or not
+    if(!email || !password) {
+      return res.status(400).send({
+        success: false,
+        message: "All Fields are required",
+      });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email }).populate("additionalDetails");
+    if(!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User is not registered, please signup"
+      })
+    }
+
+    // Validate Password
+    if(await bcrypt.compare(password, user.password)) {
+
+      const payload = {
+        email: user.email,
+        id: user._id,
+        accountType: user.accountType
+      }
+
+      // Create Token
+      const token = JWT.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "24h"
+      })
+
+      user.token = token;
+      user.password = undefined;
+
+      // Generate Cookie
+      const options = {
+        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 100),
+        httpOnly: true,
+        secure: true
+      }
+
+      // Return Cookie and success message
+      return res.cookie("token", token, options).status(200).json({
+        success: true,
+        message: "User logged in successfully",
+        token,
+        user
+      })
+    }
+    else {
+      return res.status(401).json({
+        success: false,
+        message: "password is incorrect"
+      })
+    }
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Login failed, Please try again.",
+    });
+  }
+}
+
+// ********************************** CHANGE PASSWORD ************************************* //
+
+export { sendotp, signup, login };
