@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 // Define the Tags schema
-const CategorySchema = new mongoose.Schema({
+const categorySchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
@@ -16,5 +16,4 @@ const CategorySchema = new mongoose.Schema({
 });
 
 // Export the Tags model
-const Category = mongoose.model("Category", CategorySchema);
-export default Category;
+module.exports = mongoose.model("Category", categorySchema);

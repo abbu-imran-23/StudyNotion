@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
-import MailSender from "../utils/MailSender.js"
-// const emailTemplate = require("../mail/templates/emailVerificationTemplate");
-
-// Define the OTP schema
+const mongoose = require("mongoose");
+const mailSender = require("../utils/mailSender");
+const emailTemplate = require("../mail/templates/emailVerificationTemplate");
 const OTPSchema = new mongoose.Schema({
 	email: {
 		type: String,
@@ -19,15 +17,18 @@ const OTPSchema = new mongoose.Schema({
 	},
 });
 
-// Define a function to send email
+// Define a function to send emails
 async function sendVerificationEmail(email, otp) {
+	// Create a transporter to send emails
+
+	// Define the email options
+
 	// Send the email
 	try {
-		const mailResponse = await MailSender(
+		const mailResponse = await mailSender(
 			email,
 			"Verification Email",
-            otp
-			// emailTemplate(otp)
+			emailTemplate(otp)
 		);
 		console.log("Email sent successfully: ", mailResponse.response);
 	} catch (error) {
@@ -47,6 +48,6 @@ OTPSchema.pre("save", async function (next) {
 	next();
 });
 
-// Export the OTP model
 const OTP = mongoose.model("OTP", OTPSchema);
-export default OTP;
+
+module.exports = OTP;

@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose")
 
-// Define the CourseProgress schema
-const CourseProgressSchema = new mongoose.Schema({
+const courseProgress = new mongoose.Schema({
   courseID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Course",
@@ -18,6 +17,4 @@ const CourseProgressSchema = new mongoose.Schema({
   ],
 })
 
-// Export the CourseProgress model
-const CourseProgress = mongoose.model("CourseProgress", CourseProgressSchema);
-export default CourseProgress;
+module.exports = mongoose.model("courseProgress", courseProgress)

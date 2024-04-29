@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 // Define the RatingAndReview schema
-const RatingAndReviewSchema = new mongoose.Schema({
+const ratingAndReviewSchema = new mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
@@ -24,5 +24,4 @@ const RatingAndReviewSchema = new mongoose.Schema({
 });
 
 // Export the RatingAndReview model
-const RatingAndReview = mongoose.model("RatingAndReview", RatingAndReviewSchema);
-export default RatingAndReview;
+module.exports = mongoose.model("RatingAndReview", ratingAndReviewSchema);

@@ -1,15 +1,10 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-// Define the SubSection schema
-const SubSectionSchema = new mongoose.Schema(
-    {
-        title: { type: String },
-        timeDuration: { type: String },
-        description: { type: String },
-        videoUrl: { type: String },
-    }
-);
+const SubSectionSchema = new mongoose.Schema({
+	title: { type: String },
+	timeDuration: { type: String },
+	description: { type: String },
+	videoUrl: { type: String },
+});
 
-// Export the SubSection model
-const SubSection = mongoose.model("SubSection", SubSectionSchema);
-export default SubSection;
+module.exports = mongoose.model("SubSection", SubSectionSchema);

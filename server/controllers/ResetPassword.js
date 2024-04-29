@@ -1,21 +1,17 @@
-import { User } from "../models/Models.js";
-import MailSender from "../utils/MailSender.js";
-import bcrypt from "bcrypt";
-import crypto from "crypto";
-
-// ***************************** Reset Password Token ********************************** //
-const resetPasswordToken = async (req, res) => {
+const User = require("../models/User")
+const mailSender = require("../utils/mailSender")
+const bcrypt = require("bcrypt")
+const crypto = require("crypto")
+exports.resetPasswordToken = async (req, res) => {
   try {
     const email = req.body.email
-    const user = await User.findOne({ email: email });
-
+    const user = await User.findOne({ email: email })
     if (!user) {
       return res.json({
         success: false,
         message: `This Email: ${email} is not Registered With Us Enter a Valid Email `,
       })
     }
-
     const token = crypto.randomBytes(20).toString("hex")
 
     const updatedDetails = await User.findOneAndUpdate(
@@ -28,18 +24,19 @@ const resetPasswordToken = async (req, res) => {
     )
     console.log("DETAILS", updatedDetails)
 
-    const url = `http://localhost:3000/update-password/${token}`
-    // const url = `https://studynotion-edtech-project.vercel.app/update-password/${token}`
+    // const url = `http://localhost:3000/update-password/${token}`
+    const url = `https://studynotion-edtech-project.vercel.app/update-password/${token}`
 
-    await MailSender(
+    await mailSender(
       email,
-      "Password Reset",     
+      "Password Reset",
       `Your Link for email verification is ${url}. Please click this url to reset your password.`
     )
 
-    return res.status(200).json({
+    res.json({
       success: true,
-      message: "Email Sent Successfully, Please Check Your Email to Continue Further",
+      message:
+        "Email Sent Successfully, Please Check Your Email to Continue Further",
     })
   } catch (error) {
     return res.json({
@@ -50,20 +47,19 @@ const resetPasswordToken = async (req, res) => {
   }
 }
 
-// ***************************** Reset Password ********************************* //
-const resetPassword = async (req, res) => {
+exports.resetPassword = async (req, res) => {
   try {
     const { password, confirmPassword, token } = req.body
 
     if (confirmPassword !== password) {
-      return res.status(400).json({
+      return res.json({
         success: false,
         message: "Password and Confirm Password Does not Match",
       })
     }
     const userDetails = await User.findOne({ token: token })
     if (!userDetails) {
-      return res.status(401).json({
+      return res.json({
         success: false,
         message: "Token is Invalid",
       })
@@ -80,17 +76,15 @@ const resetPassword = async (req, res) => {
       { password: encryptedPassword },
       { new: true }
     )
-    return res.status(200).json({
+    res.json({
       success: true,
       message: `Password Reset Successful`,
     })
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       error: error.message,
       success: false,
       message: `Some Error in Updating the Password`,
     })
   }
 }
-
-export { resetPasswordToken, resetPassword };

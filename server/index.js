@@ -1,27 +1,52 @@
-import express from "express";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-// import cors from "cors";
-import UserRoutes from "./routes/User.js";
-import dbConnection from "./config/database.js";
-
+// Importing necessary modules and packages
+const express = require("express");
 const app = express();
+const userRoutes = require("./routes/User.js");
+const profileRoutes = require("./routes/Profile.js");
+const courseRoutes = require("./routes/Course");
+const paymentRoutes = require("./routes/Payments");
+const contactUsRoute = require("./routes/Contact");
+const database = require("./config/database");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const { cloudinaryConnect } = require("./config/cloudinary");
+const fileUpload = require("express-fileupload");
+const dotenv = require("dotenv");
+
+// Setting up port number
+const PORT = process.env.PORT || 4000;
+
+// Loading environment variables from .env file
 dotenv.config();
 
-const PORT = process.env.PORT;
-
+// Connecting to database
+database();
+ 
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
-// app.use(
-// 	cors({
-// 		origin: "*",
-// 		credentials: true,
-// 	})
-// );
+app.use(
+	cors({
+		origin: "*",
+		credentials: true,
+	})
+);
+app.use(
+	fileUpload({
+		useTempFiles: true,
+		tempFileDir: "/tmp/",
+	})
+);
+
+// Connecting to cloudinary
+cloudinaryConnect();
 
 // Setting up routes
-app.use("/auth", UserRoutes);
+app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/profile", profileRoutes);
+app.use("/api/v1/course", courseRoutes);
+app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/reach", contactUsRoute);
 
 // Testing the server
 app.get("/", (req, res) => {
@@ -31,9 +56,9 @@ app.get("/", (req, res) => {
 	});
 });
 
-// Database Connection
-dbConnection();
-
+// Listening to the server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+	console.log(`App is listening at ${PORT}`);
 });
+
+// End of code.
