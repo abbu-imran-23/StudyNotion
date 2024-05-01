@@ -1,15 +1,15 @@
 // Importing necessary modules and packages
 const express = require("express");
 const app = express();
-const userRoutes = require("./routes/User.js");
-const profileRoutes = require("./routes/Profile.js");
+const userRoutes = require("./routes/User");
+const profileRoutes = require("./routes/Profile");
 const courseRoutes = require("./routes/Course");
 const paymentRoutes = require("./routes/Payments");
 const contactUsRoute = require("./routes/Contact");
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const { cloudinaryConnect } = require("./config/cloudinary");
+// const { cloudinaryConnect } = require("./config/cloudinary");
 const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
 
@@ -39,7 +39,7 @@ app.use(
 );
 
 // Connecting to cloudinary
-cloudinaryConnect();
+// cloudinaryConnect();
 
 // Setting up routes
 app.use("/api/v1/auth", userRoutes);

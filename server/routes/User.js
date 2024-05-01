@@ -29,9 +29,7 @@ router.post("/login", login)
 router.post("/signup", signup)
 
 // Route for sending OTP to the user's email
-console.log("Calling sendotp endpoint before");
 router.post("/sendotp", sendotp)
-console.log("Calling sendotp endpoint after");
 
 // Route for Changing the password
 router.post("/changepassword", auth, changePassword)
