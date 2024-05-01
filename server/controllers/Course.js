@@ -3,9 +3,9 @@ const Category = require("../models/Category")
 const Section = require("../models/Section")
 const SubSection = require("../models/Subsection")
 const User = require("../models/User")
-const { uploadImageToCloudinary } = require("../utils/ImageUploader")
+// const { uploadImageToCloudinary } = require("../utils/ImageUploader")
 const CourseProgress = require("../models/CourseProgress")
-const { convertSecondsToDuration } = require("../utils/SecToDuration")
+// const { convertSecondsToDuration } = require("../utils/SecToDuration")
 // Function to create a new course
 exports.createCourse = async (req, res) => {
   try {
@@ -143,15 +143,15 @@ exports.editCourse = async (req, res) => {
     }
 
     // If Thumbnail Image is found, update it
-    if (req.files) {
-      console.log("thumbnail update")
-      const thumbnail = req.files.thumbnailImage
-      const thumbnailImage = await uploadImageToCloudinary(
-        thumbnail,
-        process.env.FOLDER_NAME
-      )
-      course.thumbnail = thumbnailImage.secure_url
-    }
+    // if (req.files) {
+    //   console.log("thumbnail update")
+    //   const thumbnail = req.files.thumbnailImage
+    //   const thumbnailImage = await uploadImageToCloudinary(
+    //     thumbnail,
+    //     process.env.FOLDER_NAME
+    //   )
+    //   course.thumbnail = thumbnailImage.secure_url
+    // }
 
     // Update only the fields that are present in the request body
     for (const key in updates) {
@@ -326,7 +326,7 @@ exports.getCourseDetails = async (req, res) => {
       })
     })
 
-    const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
+    const totalDuration = totalDurationInSeconds
 
     return res.status(200).json({
       success: true,
@@ -394,7 +394,7 @@ exports.getFullCourseDetails = async (req, res) => {
       })
     })
 
-    const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
+    const totalDuration = totalDurationInSeconds
 
     return res.status(200).json({
       success: true,
