@@ -5,7 +5,7 @@ const Course = require("../models/Course")
 const User = require("../models/User")
 const { uploadImageToCloudinary } = require("../utils/ImageUploader")
 const mongoose = require("mongoose")
-const { convertSecondsToDuration } = require("../utils/SecToDuration")
+const convertSecondsToDuration = require("../utils/SecToDuration")
 // Method for updating a profile
 exports.updateProfile = async (req, res) => {
   try {
